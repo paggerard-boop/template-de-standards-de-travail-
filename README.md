@@ -17,14 +17,32 @@ Plus besoin de répéter "applique ma méthode" à chaque conversation : la mét
 
 ## Utilisation
 
+### Comme base de nouveau projet
+
 ```bash
-# Cloner le template comme base d'un nouveau projet
 git clone <url-de-ce-repo> mon-nouveau-projet
 cd mon-nouveau-projet
 rm -rf .git && git init   # repartir d'un historique propre
 ```
 
 Ouvrir le dossier dans Claude Code : la méthode est appliquée d'office.
+
+### Installation globale (toutes sessions, tous repos)
+
+Copier `CLAUDE.md` dans `~/.claude/CLAUDE.md` pour que la méthode soit chargée
+dans **toutes** les sessions Claude Code, sans avoir à toucher chaque repo :
+
+```bash
+./scripts/sync-claude-method.sh
+```
+
+Ce script :
+- fait un `git pull --ff-only` du repo template
+- copie `CLAUDE.md` → `~/.claude/CLAUDE.md`
+- crée un backup horodaté si l'ancien diffère
+- ne touche **pas** à `~/.claude/settings.json` (hook = installation manuelle one-shot)
+
+Re-lancer le script à chaque évolution de la méthode pour propager partout.
 
 ## Méthode résumée (extrait de `CLAUDE.md`)
 
