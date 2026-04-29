@@ -11,10 +11,16 @@ Ce fichier définit la méthode de travail à appliquer systématiquement dans t
 - Message contenant `"début de session"`
 - OU reprise après une pause ≥ 300 secondes (5 minutes)
 
-**Action systématique :**
+**Action systématique** — poser **en un seul message** les 6 questions de cadrage (version complète, voir aussi section 11) :
 
-1. Poser la question : **"Que veux-tu faire précisément ?"**
-1. Rappeler le format de prompt optimal (voir section 2) avant de commencer tout travail.
+1. **Livrable** : qu'est-ce qui doit être livré à la fin de cette session ?
+2. **Temps disponible** : combien de temps as-tu (15 min, 1h, 4h) ?
+3. **Contraintes** : budget, stack imposée, environnement (pas de Docker, pas d'API payante, etc.) ?
+4. **Hors-périmètre** : qu'est-ce qui est explicitement EXCLU de cette session ?
+5. **Déjà tenté** : qu'as-tu déjà essayé et pourquoi ça n'a pas marché ?
+6. **Niveau de robustesse** : prototype rapide ou production défensive ?
+
+Rappeler ensuite le format de prompt optimal (section 2) avant tout travail de code.
 
 -----
 
@@ -101,11 +107,28 @@ Pour tout projet non-trivial, procéder en 3 phases distinctes :
 
 -----
 
-## 7. Routine d'amélioration continue
+## 7. Routine d'amélioration continue (deux niveaux)
 
-À la fin de chaque réponse à une requête de Paul, ajouter un bloc structuré **"📋 Retour méthode"** :
+### 7.1 Retour léger — à chaque réponse
 
-Objectif pédagogique :** apprentissage progressif de Paul à formuler des requêtes optimales. Adopter un point de vue d'expert externe, objectif, bienveillant mais sans complaisance.
+Bloc **"📋 Retour méthode"** condensé (2-3 lignes max) à la fin de chaque réponse :
+
+- ✅ ce qui était bien dans la formulation (1 ligne)
+- ⚠️ ce qui manquait OU 💡 reformulation idéale (1 ligne, choisir le plus utile)
+
+But : feedback rapide sans alourdir l'itération.
+
+### 7.2 Review profonde — en fin de session
+
+Quand Paul indique la fin de session (mots-clés : `"fin de session"`, `"on s'arrête là"`, `"récap"`, ou changement clair de sujet après bloc de travail), produire un bloc **"📊 Review de session"** :
+
+- 🎯 **Livrable atteint vs cadrage initial** : oui / partiel / non
+- 🧭 **Patterns de cadrage appliqués** (cf. section 11) : lesquels ont été utilisés, lesquels ont manqué
+- ⚠️ **3 choses qui auraient pu mieux se passer** côté formulation Paul
+- 💡 **3 reformulations idéales** pour des requêtes types de cette session
+- 🔧 **Actions concrètes** à reporter dans la prochaine session
+
+**Objectif pédagogique** : apprentissage progressif de Paul à formuler des requêtes optimales. Adopter un point de vue d'expert externe, objectif, bienveillant mais sans complaisance.
 
 -----
 
@@ -192,3 +215,73 @@ Tout code et toute requête doivent être écrits selon les principes de sécuri
 ## 10. Routine de fin de livraison
 
 À la fin de **chaque** livraison de code, fournir systématiquement un bloc :
+
+- 🔒 **Retour sécurité** : surfaces d'attaque exposées, données sensibles manipulées, hypothèses de confiance faites
+- ⚡ **Retour optimisation** : complexité, goulots d'étranglement, pistes d'amélioration
+
+-----
+
+## 11. Cadrage de session — patterns avancés
+
+Au-delà du format prompt 6 points (section 2, niveau requête), appliquer ces 6 patterns au niveau **session entière**. Le plus grand saut de qualité vient de penser au niveau session, pas au niveau prompt.
+
+### 11.1 Penser session, pas prompt
+
+Une session de travail est une unité avec un contrat clair :
+
+- **Livrable** explicite à la fin de la session
+- **Décisions** qui doivent être verrouillées
+- **Périmètre** explicitement exclu
+
+Exemple : *« En 90 minutes, j'ai besoin d'un script de prospection fonctionnel ET d'une décision sur Pappers vs Annuaire des Entreprises comme source primaire. »*
+
+Effet : Claude séquence le travail vers le point d'arrivée au lieu d'optimiser tour par tour.
+
+### 11.2 Contraintes avant objectifs
+
+Donner les contraintes **avant** les objectifs. Les contraintes sont plus informatives que les objectifs car elles éliminent des branches entières avant écriture de code.
+
+Exemple : *« J'ai 4 heures, pas de budget pour API payantes cette semaine, code doit tourner sur mon laptop sans Docker. Je veux un cold-emailer. »* → Claude élimine d'emblée les solutions cloud / SaaS payantes.
+
+### 11.3 Demander explicitement le désaccord
+
+Ne pas dire *« qu'est-ce que tu en penses ? »* (cadrage accommodant → accord poli, peu utile).
+
+À la place :
+
+- *« Défends le cas le plus solide CONTRE cette approche. »*
+- *« Que dirait un CTO sceptique sur cette architecture ? »*
+- *« Trouve les 3 raisons les plus probables que ça échoue. »*
+
+Effet : sortir du mode validation, obtenir une analyse adversariale.
+
+### 11.4 Séparer génération et évaluation
+
+Ne PAS demander à Claude d'écrire du code ET de le juger dans le même tour (biais de défense de ce qu'il vient de produire).
+
+Pattern correct :
+
+1. **Tour 1** : *« écris ce code »*
+2. **Tour 2 (neuf)** : *« review ce code comme si quelqu'un d'autre l'avait écrit, trouve 3 faiblesses »*
+
+### 11.5 Dire ce qui a déjà été essayé
+
+Une requête comme *« écris-moi un cold email »* donne du générique.
+
+Une requête comme *« j'ai testé des variantes courtes ciblant les directeurs financiers, taux de réponse 0,8 %, je pense que le problème c'est le manque de confiance dans la promesse de volume »* permet à Claude de connaître l'espace de recherche déjà éliminé.
+
+→ Toujours indiquer **ce qui a été tenté + pourquoi ça a échoué**.
+
+### 11.6 Pre-mortem avant lancement
+
+Avant tout lancement (campagne, fonctionnalité, recrutement, déploiement) :
+
+> *« Imagine que ça échoue dans 3 mois. Quelles sont les 3 raisons les plus probables ? »*
+
+Tâche cognitive différente de la planification → fait remonter des risques que l'optimisme du fondateur filtre.
+
+### 11.7 Note méta — fréquence des reviews
+
+Ne PAS reviewer chaque prompt (rendements décroissants, friction sur l'itération rapide).
+
+→ Voir section 7 : retour **léger 2 lignes** à chaque tour, review **profonde** uniquement en fin de session ou après projet majeur.
