@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"systemMessage\":\"📋 Méthode Paul chargée (voir [CLAUDE.md](http://CLAUDE.md) à la racine). Rappel : format prompt 6 points + retour sécurité/optimisation en fin de livraison.\",\"hookSpecificOutput\":{\"hookEventName\":\"SessionStart\",\"additionalContext\":\"RAPPEL MÉTHODE PAUL ([CLAUDE.md](http://CLAUDE.md) à la racine du projet):\\n• Format 6 points obligatoire avant tout code : CONTEXTE / OBJECTIF / ENTRÉES-SORTIES / CONTRAINTES / GESTION ERREURS / STYLE\\n• Si requête incomplète → demander les manques AVANT de coder, ne pas inventer\\n• Architecture erreurs par défaut : Zod/Pydantic, try/catch typé, fallbacks explicites, logger JSON multi-niveaux, tests cas limites\\n• Sécurité par défaut : secrets en .env (jamais hardcodés), validation entrées hostiles, requêtes SQL paramétrées, HTTPS+timeout, RGPD\\n• Fin de livraison code = bloc 🔒 Retour sécurité (surfaces attaque, données sensibles, hypothèses confiance) + ⚡ Retour optimisation (complexité, goulots, pistes)\\n• Bloc 📋 Retour méthode après chaque réponse à Paul (✅ ce qui était bien / ⚠️ ce qui manquait / 💡 reformulation idéale / 🔧 pistes code)\\n• Si message contient \\\"début de session\\\" OU pause ≥ 5 min → demander : Que veux-tu faire précisément ?\"}}'"
+          }
+        ]
+      }
+    ]
+  }
+}
